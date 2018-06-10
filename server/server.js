@@ -15,12 +15,22 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('new user connected ');
 
-    // Custom emitters and connections
+    socket.emit('new_message', {
+        from : "Tera Baap",
+        text : `welcome ${socket.id}`,
+        timestamp : new Date().getTime()
+    });
+
+    socket.broadcast.emit('new_message', {
+        from : "Tera Baap",
+        text : `${socket.id} has joined the chat , fuck him up`,
+        timestamp : new Date().getTime()
+    });
 
     // received new chat message from any user !!
     socket.on('create_message', (message) => {
         console.log("server : ", message);
-        socket.broadcast.emit('new_message', {message : message});
+        io.emit('new_message', {message : message});
     });
  
 
