@@ -18,11 +18,11 @@ io.on('connection', (socket) => {
     // Custom emitters and connections
 
     // received new chat message from any user !!
-    socket.on('create_message  ', (message) => {
+    socket.on('create_message', (message) => {
         console.log("server : ", message);
         socket.broadcast.emit('new_message', {message : message});
     });
-
+ 
 
     socket.on('disconnect', (socket) => {
         console.log("Client disconnected");
