@@ -15,15 +15,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('new user connected ');
 
-    socket.emit('newEmail',{
-        from : "me",
-        text : "Hey its your first email",
-        createdAt : "sometime"
+    // Custom emitters and connections
+
+    // received new chat message from any user !!
+    socket.on('create_message  ', (message) => {
+        console.log("server : ", message);
+        socket.broadcast.emit('new_message', {message : message});
     });
 
-    socket.on('createEmail', (newEmail) => {
-        console.log('createEmail', newEmail);
-    });
 
     socket.on('disconnect', (socket) => {
         console.log("Client disconnected");
