@@ -21,9 +21,10 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('new_message', generateMessage("Admin", `${socket.id} has joined the chat , fuck him up`));
 
     // received new chat message from any user !!
-    socket.on('create_message', (message) => {
+    socket.on('create_message', (message, callback) => {
         console.log("server : ", message);
         io.emit('new_message', generateMessage(message.from, message.text));
+        callback("This is ACK from server");
     });
  
 
