@@ -11,20 +11,29 @@ $(document).ready(function () {
 
     socket.on('newMessage', function (message) {
         var formattedTime = moment(message.createdAt).format('h:mm:ss a');
-        console.log("New Message : ", message);
-        var nayaMessage = $('<li></li>');
-        nayaMessage.text(`${message.from} ${formattedTime}: ${message.text}`);
-        $("#messages").append(nayaMessage);
+        var template = $('#message-template').html();
+        console.log(template);
+        var html = Mustache.render(template, {
+            from : message.from,
+            text : message.text,
+            createdAt : formattedTime
+        });
+
+        $('#messages').append(html);
     });
 
     socket.on('newLocationMessage', function (message) {
         var formattedTime = moment(message.createdAt).format('h:mm:ss a');
-        console.log("New Location Message : ", message);
-        var nayaMessage = $(`<li>Admin ${formattedTime} : </li>`);
-        var anchor = $('<a target="_blank">My Current Location</a>');
-        anchor.attr('href', message.url);
-        nayaMessage.append(anchor);
-        $("#messages").append(nayaMessage);
+        var formattedTime = moment(message.createdAt).format('h:mm:ss a');
+        var template = $('#location-message-template').html();
+        console.log(template);
+        var html = Mustache.render(template, {
+            from : message.from,
+            createdAt : formattedTime,
+            url : message.url
+        });
+
+        $('#messages').append(html);
     });
 
     $('#message-form').on('submit', function (e) {
