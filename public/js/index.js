@@ -10,15 +10,17 @@ $(document).ready(function () {
     });
 
     socket.on('newMessage', function (message) {
+        var formattedTime = moment(message.createdAt).format('h:mm:ss a');
         console.log("New Message : ", message);
         var nayaMessage = $('<li></li>');
-        nayaMessage.text(`${message.from} : ${message.text}`);
+        nayaMessage.text(`${message.from} ${formattedTime}: ${message.text}`);
         $("#messages").append(nayaMessage);
     });
 
     socket.on('newLocationMessage', function (message) {
+        var formattedTime = moment(message.createdAt).format('h:mm:ss a');
         console.log("New Location Message : ", message);
-        var nayaMessage = $('<li></li>');
+        var nayaMessage = $(`<li>Admin ${formattedTime} : </li>`);
         var anchor = $('<a target="_blank">My Current Location</a>');
         anchor.attr('href', message.url);
         nayaMessage.append(anchor);
