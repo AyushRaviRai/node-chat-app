@@ -67,7 +67,7 @@ $(document).ready(function () {
         var message = $('[name=message]');
         // if (message.val()) {
             socket.emit('createMessage', {
-                from : socket.id,
+                from : new URLSearchParams(window.location.search).get('name'),
                 text : message.val()
             }, function (ackData) {
                 console.log(ackData);
