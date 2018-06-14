@@ -1,5 +1,30 @@
 $(document).ready(function () {
 
+    /**
+     * [
+     *     Bada Sexy logic hain iske peeche :) :)
+     *     Maza aaya samajh ke
+     * ]
+     * @return {[type]} [description]
+     */
+    function scrollToBottom() {
+        var messages = $('#messages');
+        var latestMessage = messages.children('li:last-child');
+
+        var clientHeight = messages.prop('clientHeight');
+        var scrollTop = messages.prop('scrollTop');
+        var scrollHeight = messages.prop('scrollHeight');
+        var latestMessageHeight = latestMessage.innerHeight();
+
+        // Yeh pata nahi kyu kiya hain 
+        // may be buffer not sure have to confirm
+        var secondLastMessageHeight = latestMessage.prev().innerHeight();
+
+        if (clientHeight + scrollTop + latestMessageHeight + secondLastMessageHeight >= scrollHeight) {
+            messages.prop('scrollTop', scrollHeight);
+        }
+    }
+
     var socket = io();
     socket.on('connect', function() {
         console.log("connected to server");
@@ -20,13 +45,13 @@ $(document).ready(function () {
         });
 
         $('#messages').append(html);
+        scrollToBottom();
     });
 
     socket.on('newLocationMessage', function (message) {
         var formattedTime = moment(message.createdAt).format('h:mm:ss a');
         var formattedTime = moment(message.createdAt).format('h:mm:ss a');
         var template = $('#location-message-template').html();
-        console.log(template);
         var html = Mustache.render(template, {
             from : message.from,
             createdAt : formattedTime,
@@ -34,12 +59,13 @@ $(document).ready(function () {
         });
 
         $('#messages').append(html);
+        scrollToBottom();
     });
 
     $('#message-form').on('submit', function (e) {
         e.preventDefault();
         var message = $('[name=message]');
-        if (message.val()) {
+        // if (message.val()) {
             socket.emit('createMessage', {
                 from : socket.id,
                 text : message.val()
@@ -47,7 +73,7 @@ $(document).ready(function () {
                 console.log(ackData);
                 message.val('');
             });
-        }
+        // }
     });
 
     var locationButton = $("#send-location");
