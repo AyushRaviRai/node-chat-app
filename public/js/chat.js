@@ -28,6 +28,26 @@ $(document).ready(function () {
     var socket = io();
     socket.on('connect', function() {
         console.log("connected to server");
+        room = new URLSearchParams(window.location.search).get('room');
+        name = new URLSearchParams(window.location.search).get('name');
+        socket.emit('join', {room : room, name :name}, function(error) {
+            if (error) {
+                window.location.href = '/index.html';
+            } else {
+
+            }
+        });
+    });
+
+    socket.on('updateUserList', function (users) {
+        // Update User list !!
+        var ol = $('<ol></ol>');
+
+        users.forEach( function(user) {
+            ol.append($('<li></li>').text(user));
+        });
+
+        $('#users').html(ol);
     });
 
     socket.on('disconnect', function() {
