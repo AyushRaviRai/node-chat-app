@@ -40,12 +40,12 @@ io.on('connection', (socket) => {
     // received new chat message from any user !!
     socket.on('createMessage', (message, callback) => {
         console.log("server : ", message);
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        io.to(users.getUser(socket.id).room).emit('newMessage', generateMessage(message.from, message.text));
         callback("This is ACK from server");
     });
 
     socket.on('createLocationMessage', (position, callback) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', position.latitude, position.longitude));
+        io.to(users.getUser(socket.id).room).emit('newLocationMessage', generateLocationMessage('Admin', position.latitude, position.longitude));
         callback();
     });
  
